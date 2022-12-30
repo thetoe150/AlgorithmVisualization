@@ -1,24 +1,35 @@
 CC = g++
-STATIC_EXE = NoDLLsample.exe
+STATIC_EXE = SLLsample.exe
 DYNAMIC_EXE = DLLsample.exe
 DLL = DSA.dll
 
 ####### Compile flags #######
-EXE_CFLAGS = -Wall -std=c++14 -g -Iinclude
+EXE_CFLAGS = -Wall -std=c++14 -g -Iinclude -Iinclude/SFML
 DLL_CFLAGS = $(EXE_CFLAGS) -fPIC
 
 ####### Linker flags #######
 #Linker flags for static exe build
-EXE_LFLAGS = -Wall -std=c++14 -g
+EXE_LFLAGS = -Wall -std=c++14 -g -Llib/SFML -lsfml-graphics -lsfml-window -lsfml-system
 #Linker flags for dynamic exe build
 EXE_LDFLAGS = $(EXE_LFLAGS) -Lbin -lDSA
 #Linker flags for DLL build
 DLL_LDFLAGS = -shared
 
+#obj/DataStructure.o obj/Algorithm.o obj/main.o
 ####### OBJECTS #######
+SRC_DIR = ./src/*
+SRC_FILE = $(wildcard src/*.cpp)
 DLL_OBJECTS = obj/DataStructure.o obj/Algorithm.o
-STATIC_EXE_OBJECTS = obj/DataStructure.o obj/Algorithm.o obj/main.o
+
+#replace src/*.cpp to obj/*.o
+STATIC_EXE_OBJECTS =$(patsubst src/%, obj/%, $(patsubst %.cpp, %.o, $(SRC_FILE)))
 DYNAMIC_EXE_OBJECTS = obj/main.o
+
+list_source_file: $(SRC_FILE)
+	@echo $^ 
+
+list_object_file:
+	@echo $(STATIC_EXE_OBJECTS)
 
 ####### RULES #######
 
@@ -28,23 +39,23 @@ dbr: bin/$(DLL) bin/$(DYNAMIC_EXE)
 
 ####### static build run #######
 sbr: bin/$(STATIC_EXE)
-	./bin/NoDLLsample.exe
+	./bin/SLLsample.exe
 
-####### DLL build rule #######
-bin/$(DLL): $(DLL_OBJECTS) | bin
-	$(CC) $(DLL_LDFLAGS) $(DLL_OBJECTS) -o $@
-
-####### dynamic EXE build rule #######
+####### dynamic EXE link rule #######
 bin/$(DYNAMIC_EXE): $(DYNAMIC_EXE_OBJECTS) | bin
-	$(CC) $(EXE_LDFLAGS) $(DYNAMIC_EXE_OBJECTS) -o $@
+	$(CC) $(DYNAMIC_EXE_OBJECTS) -o $@ $(EXE_LDFLAGS)
 
-####### static EXE build rule #######
+####### static EXE link rule #######
 bin/$(STATIC_EXE): $(STATIC_EXE_OBJECTS) | bin
-	$(CC) $(EXE_LFLAGS) $(STATIC_EXE_OBJECTS) -o $@
+	$(CC) $(STATIC_EXE_OBJECTS) -o $@ $(EXE_LFLAGS)
 
-####### object build rule #######
+####### DLL link rule #######
+bin/$(DLL): $(DLL_OBJECTS) | bin
+	$(CC) $(DLL_OBJECTS) -o $@ $(DLL_LDFLAGS)
+
+####### compile file rule #######
 obj/%.o: src/%.cpp include/%.hpp | obj
-	$(CC) $(EXE_CFLAGS) -c $< -o $@
+	$(CC) -c $< -o $@ $(EXE_CFLAGS)
 
 clean:
 	rm obj/*.o

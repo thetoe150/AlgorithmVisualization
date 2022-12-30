@@ -42,8 +42,39 @@ void Sort<T>::Selection(T* start, T* end)
             *(start + i) = temp;
          }
       }
-
    }
 }
 
+//TODO: write description
+template <typename T>
+void Sort<T>::Bubble(T* start, T* end)
+{
+   bool sorted = true;
+   int size = end - start;
+   for(int i = 0; i < size - 1; i++)
+   {
+      sorted = true;
+      for(int j = size - 1; j > i; j--)
+      {
+         if(*(start + j) < *(start + j - 1))
+         {
+            sorted = false;
+            T temp = *(start + j);
+            *(start + j) = *(start + j - 1);
+            *(start + j - 1) = temp;
+         }
+      }
+      if(sorted) break;
+      print(start, end);
+   }
+}
+
+//TODO: write description
+template <typename T>
+void Sort<T>::Merge(T* start, T* end)
+{
+
+}
+
 template class Sort<int>;
+template class Sort<float>;

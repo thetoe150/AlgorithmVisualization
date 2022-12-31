@@ -76,5 +76,13 @@ void Sort<T>::Merge(T* start, T* end)
 
 }
 
+template <typename T>
+void Sort<T>::MergeRec(T* start, T* end)
+{
+   if(start == end)
+      return;
+   
+}
+
 template class Sort<int>;
 template class Sort<float>;

@@ -9,7 +9,7 @@ DLL_CFLAGS = $(EXE_CFLAGS) -fPIC
 
 ####### Linker flags #######
 #Linker flags for static exe build
-EXE_LFLAGS = -Wall -std=c++14 -g -Llib/SFML -lsfml-graphics -lsfml-window -lsfml-system
+EXE_LFLAGS = -Wall -std=c++14 -g -Llib/SFML -lsfml-graphics -lsfml-window -lsfml-system -lopengl32
 #Linker flags for dynamic exe build
 EXE_LDFLAGS = $(EXE_LFLAGS) -Lbin -lDSA
 #Linker flags for DLL build
@@ -20,7 +20,6 @@ DLL_LDFLAGS = -shared
 SRC_DIR = ./src/*
 SRC_FILE = $(wildcard src/*.cpp)
 DLL_OBJECTS = obj/DataStructure.o obj/Algorithm.o
-
 #replace src/*.cpp to obj/*.o
 STATIC_EXE_OBJECTS =$(patsubst src/%, obj/%, $(patsubst %.cpp, %.o, $(SRC_FILE)))
 DYNAMIC_EXE_OBJECTS = obj/main.o

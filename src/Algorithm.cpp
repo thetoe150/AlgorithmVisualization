@@ -33,15 +33,19 @@ void Sort<T>::Selection(T* start, T* end)
    int size = end - start;
    for(int i = 0; i < size - 1; i++)
    {
+      T min = *(start + i);
+      int min_idx = i;
       for(int j = i + 1; j < size; j++)
       {
-         if(*(start + j) < *(start + i))
+         if(*(start + j) < min)
          {
-            T temp = *(start + j);
-            *(start + j) = *(start + i);
-            *(start + i) = temp;
+            min = *(start + j);
+            min_idx = j;
          }
       }
+      T temp = *(start + i);
+      *(start + i) = *(start + min_idx);
+      *(start + min_idx) = temp;
    }
 }
 

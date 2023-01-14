@@ -3,14 +3,35 @@
 
 const int PILLAR_SIZE = 100;
 
-int main(){
+int main(int argc, char *argv[]){
     //int array[10] = {6,4,2,18,8,1,33,12,7,0};
     //Sort<int>::Insertion(array, array + 10);
     //Sort<int>::Selection(array, array + 10);
     //Sort<int>::Bubble(array, array + 10);
+    //Sort<int>::MergeRec(array, array + 10);
     //Sort<int>::print(array, array + 10);
 
-    visualizeSorting();
+    if(argc < 2) return 1;
+    switch(argv[1][0])
+    {
+        case '1':{
+            visualizeSorting(SortType::Selection);
+            break;
+        }
+
+        case '2':{
+            visualizeSorting(SortType::Insertion);
+            break;
+        }
+            
+        case '3':{
+            visualizeSorting(SortType::Bubble);
+            break;
+        }
+        case '4':{
+            visualizeSorting(SortType::Merge);
+        }
+    }
     
     return 0;
 }

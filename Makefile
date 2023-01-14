@@ -38,7 +38,7 @@ dbr: bin/$(DLL) bin/$(DYNAMIC_EXE)
 
 ####### static build run #######
 sbr: bin/$(STATIC_EXE)
-	./bin/SLLsample.exe
+	
 
 ####### dynamic EXE link rule #######
 bin/$(DYNAMIC_EXE): $(DYNAMIC_EXE_OBJECTS) | bin

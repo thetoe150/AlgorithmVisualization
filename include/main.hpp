@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <random>
 #include <functional>
+#include <string>
 
 #include <array>
 #include "SFML/Graphics.hpp"

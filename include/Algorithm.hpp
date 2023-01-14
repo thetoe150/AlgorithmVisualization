@@ -10,11 +10,11 @@ public:
     static void Selection(T* start, T* end);
     static void Bubble(T* start, T* end);
     static void Shell(T* start, T* end);
-    static void Merge(T* start, T* end);
-    static void Quick(T* start, T* end);
+    static void MergeRec(T* start, T* end);
+    static void QuickRec(T* start, T* end);
     static void Heap(T* start, T* end);
 
     //helper function
-    void MergeRec(T* start, T* end);
-    void MergeSort(T* start, T* end);
+    static void Merge(T* start, T* mid, T* end);
+    static void MergeSort(T* start, T* end);
 };

@@ -1,8 +1,8 @@
 #include "Visualization.hpp"
 
-const float PILLAR_WIDTH = 10.f; 
-const float PILLAR_HEIGHT = 6.f;
-const int PILLAR_SIZE = 100;  
+const float pillar_width = 10.f; 
+const float pillar_height = 6.f;
+const int pillar_size = 100;  
 
 
 void visualizeSorting(SortType type)
@@ -10,53 +10,59 @@ void visualizeSorting(SortType type)
 
     long int compareCount = 0;
     long int writeArrayCount = 0;
-    sf::RenderWindow window(sf::VideoMode(1250, 850), "Algorithm Visualization");
+    sf::RenderWindow window(sf::VideoMode(1250, 850), "algorithm visualization");
     window.setFramerateLimit(60);
 
-    //setup Font and sort info
-    sf::Font SortFont;
-    if(!SortFont.loadFromFile("res/Sugar Snow.ttf"))
+    //setup font and sort info
+    sf::Font sortfont;
+    if(!sortfont.loadFromFile("res/sugar snow.ttf"))
     {
-        std::cout<<"Load Font Fail!!"<<std::endl;
+        std::cout<<"load font fail!!"<<std::endl;
     }
 
-    sf::Text sortType("Default", SortFont, 15);
-    sortType.setStyle(sf::Text::Regular);
-    sortType.setPosition(100, 20);
+    sf::Text sorttype("default", sortfont, 15);
+    sorttype.setStyle(sf::Text::Regular);
+    sorttype.setPosition(100, 20);
 
     switch(type) 
     {
         case SortType::Insertion:
         {
-            sortType.setString("Insertion Sort");
+            sorttype.setString("insertion sort");
             break;
         }
 
         case SortType::Selection:
         {
-            sortType.setString("Selection Sort");
+            sorttype.setString("selection sort");
             break;
         }
 
         case SortType::Bubble:
         {
-            sortType.setString("Bubble Sort");
+            sorttype.setString("bubble sort");
             break;
         }
 
         case SortType::Merge:
         {
-            sortType.setString("Merge Sort");
+            sorttype.setString("merge sort");
+            break;
+        }
+
+        case SortType::Quick:
+        {
+            sorttype.setString("quick sort");
             break;
         }
     }
 
-    sf::Text StaticText("Comparation Count: \n \n Data write Count:", SortFont, 15);
-    StaticText.setStyle(sf::Text::Regular);
-    StaticText.setPosition(100, 50);
+    sf::Text staticText("comparation count: \n \n data write count:", sortfont, 15);
+    staticText.setStyle(sf::Text::Regular);
+    staticText.setPosition(100, 50);
     //setup the sorted array
-    std::array<int, PILLAR_SIZE> arr; 
-    for(int i = 0; i < PILLAR_SIZE; i++)
+    std::array<int, pillar_size> arr; 
+    for(int i = 0; i < pillar_size; i++)
     {
         arr[i] = i + 1;
     }
@@ -65,18 +71,18 @@ void visualizeSorting(SortType type)
     std::mt19937 prng(rd());
     std::shuffle(arr.begin(), arr.end(), prng);
 
-    int pillars_value[PILLAR_SIZE] = {0};
+    int pillars_value[pillar_size] = {0};
 
-    for(int i = 0; i < PILLAR_SIZE; i++)
+    for(int i = 0; i < pillar_size; i++)
     {
         pillars_value[i] = arr[i];
         std::cout << pillars_value[i] << " ";
     }
-    //Sort<int>::MergeRec(pillars_value, pillars_value + PILLAR_SIZE);
-    //Sort<int>::print(pillars_value, pillars_value + PILLAR_SIZE);
+    //sort<int>::mergerec(pillars_value, pillars_value + pillar_size);
+    //sort<int>::print(pillars_value, pillars_value + pillar_size);
     
     //setup the pillars
-    std::array<sf::RectangleShape, PILLAR_SIZE> pillars;
+    std::array<sf::RectangleShape, pillar_size> pillars;
     for(unsigned int i = 0; i < pillars.size(); i++)
     {
         pillars[i].setFillColor(sf::Color::White);
@@ -84,24 +90,24 @@ void visualizeSorting(SortType type)
         pillars[i].setOutlineThickness(2.f);
     }
 
-    auto compareTextVisual = [&compareCount, &SortFont]() -> sf::Text
+    auto compareTextVisual = [&compareCount, &sortfont]() -> sf::Text
     { 
         compareCount++;
-        sf::Text compareCountNum(std::to_string(compareCount), SortFont, 15);
+        sf::Text compareCountNum(std::to_string(compareCount), sortfont, 15);
         compareCountNum.setPosition(265, 49); 
         return compareCountNum;
     };
     
-    auto writeTextVisual = [&writeArrayCount, &SortFont]() -> sf::Text
+    auto writeTextVisual = [&writeArrayCount, &sortfont]() -> sf::Text
     { 
         writeArrayCount++;
-        sf::Text WriteCountNum(std::to_string(writeArrayCount), SortFont, 15);
-        WriteCountNum.setPosition(265, 78); 
-        return WriteCountNum;
+        sf::Text writeCountNum(std::to_string(writeArrayCount), sortfont, 15);
+        writeCountNum.setPosition(265, 78); 
+        return writeCountNum;
     };
 
-    auto sortingVisualize = [&window, &pillars_value, &pillars, StaticText, sortType, compareTextVisual, writeTextVisual]
-    (HightlightType hightlighttype, int swapEle1, int swapEle2)
+    auto drawSorting = [&window, &pillars_value, &pillars, staticText, sorttype, compareTextVisual, writeTextVisual]
+    (HightlightType hightlighttype, int swapele1, int swapele2)
     {
         if(window.isOpen())
         {
@@ -116,9 +122,9 @@ void visualizeSorting(SortType type)
             
             for(unsigned int i = 0; i < pillars.size(); i++)
             {
-                pillars[i].setSize(sf::Vector2f(PILLAR_WIDTH, - PILLAR_HEIGHT * (*(pillars_value + i))));
-                pillars[i].setPosition(30 + (PILLAR_WIDTH + 2) * i , 800.f); //plus 2 pixel for the outline of the rectangle
-                if(i == (unsigned int)swapEle1 || i == (unsigned int)swapEle2)
+                pillars[i].setSize(sf::Vector2f(pillar_width, - pillar_height * (*(pillars_value + i))));
+                pillars[i].setPosition(30 + (pillar_width + 2) * i , 800.f); //plus 2 pixel for the outline of the rectangle
+                if(i == (unsigned int)swapele1 || i == (unsigned int)swapele2)
                 {
                     if(hightlighttype == HightlightType::Compare)
                         pillars[i].setFillColor(sf::Color::Yellow);
@@ -130,8 +136,8 @@ void visualizeSorting(SortType type)
 
                 window.draw(pillars[i]);
             }
-            window.draw(StaticText);
-            window.draw(sortType);
+            window.draw(staticText);
+            window.draw(sorttype);
             window.draw(compareTextVisual());
             window.draw(writeTextVisual());
              
@@ -142,31 +148,37 @@ void visualizeSorting(SortType type)
     {
         case SortType::Insertion:
         {
-            Insertion(pillars_value, pillars_value + PILLAR_SIZE, sortingVisualize);
+            Insertion(pillars_value, pillars_value + pillar_size, drawSorting);
             break;
         }
         
         case SortType::Selection:
         {
-            Selection(pillars_value, pillars_value + PILLAR_SIZE, sortingVisualize);
+            Selection(pillars_value, pillars_value + pillar_size, drawSorting);
             break;
         }
         
         case SortType::Bubble:
         {
-            Bubble(pillars_value, pillars_value + PILLAR_SIZE, sortingVisualize);
+            Bubble(pillars_value, pillars_value + pillar_size, drawSorting);
             break;
         }
         
         case SortType::Merge:
         {
-            MergeRec(pillars_value, pillars_value + PILLAR_SIZE, 0, sortingVisualize);
+            MergeRec(pillars_value, pillars_value + pillar_size, 0, drawSorting);
+            break;
+        }
+        
+        case SortType::Quick:
+        {
+            QuickRec(pillars_value, pillars_value + pillar_size, 0, drawSorting);
             break;
         }
     }
 }
 
-void printResult(int* start, int* end)
+void printresult(int* start, int* end)
 {
     while(start != end)
     {
@@ -175,7 +187,7 @@ void printResult(int* start, int* end)
     }
 }
 
-void Insertion(int* start, int* end, std::function<void (HightlightType, int, int)> sortingVisualize)
+void Insertion(int* start, int* end, std::function<void (HightlightType, int, int)> drawSorting)
 {
     int size = end - start;
     for(int i = 1; i < size; i++)
@@ -185,8 +197,8 @@ void Insertion(int* start, int* end, std::function<void (HightlightType, int, in
         int max_temp = *(start + j);
         while(temp < *(start + j - 1) && j - 1 >= 0)
         {
-            sortingVisualize(HightlightType::Compare, i, j - 1);
-            sortingVisualize(HightlightType::Write, j, j);
+            drawSorting(HightlightType::Compare, i, j - 1);
+            drawSorting(HightlightType::Write, j, j);
             *(start + j) = *(start + j - 1);
             j--;
         }
@@ -195,7 +207,7 @@ void Insertion(int* start, int* end, std::function<void (HightlightType, int, in
     }
 }
 
-void Selection(int* start, int* end, std::function<void (HightlightType, int, int)> sortingVisualize)
+void Selection(int* start, int* end, std::function<void (HightlightType, int, int)> drawSorting)
     {
     int size = end - start;
     for(int i = 0; i < size - 1; i++)
@@ -204,7 +216,7 @@ void Selection(int* start, int* end, std::function<void (HightlightType, int, in
             int min_idx = i;
             for(int j = i + 1; j < size; j++)
             {
-                sortingVisualize(HightlightType::Compare, min_idx, j);
+                drawSorting(HightlightType::Compare, min_idx, j);
                 if(*(start + j) < min)
                 {
                     min = *(start + j);
@@ -214,11 +226,11 @@ void Selection(int* start, int* end, std::function<void (HightlightType, int, in
             int temp = *(start + i);
             *(start + i) = *(start + min_idx);
             *(start + min_idx) = temp;
-            sortingVisualize(HightlightType::Write, min_idx, i);
+            drawSorting(HightlightType::Write, min_idx, i);
         }
     }
 
-void Bubble(int* start, int* end, std::function<void (HightlightType, int, int)> sortingVisualize)
+void Bubble(int* start, int* end, std::function<void (HightlightType, int, int)> drawSorting)
 {
    bool sorted = true;
    int size = end - start;
@@ -227,7 +239,7 @@ void Bubble(int* start, int* end, std::function<void (HightlightType, int, int)>
         sorted = true;
         for(int j = size - 1; j > i; j--)
         {
-            sortingVisualize(HightlightType::Compare, j - 1, j);
+            drawSorting(HightlightType::Compare, j - 1, j);
             if(*(start + j) < *(start + j - 1))
             {
                 sorted = false;
@@ -240,7 +252,7 @@ void Bubble(int* start, int* end, std::function<void (HightlightType, int, int)>
     }
 }
 
-void Merge(int* start, int* mid, int* end, int abs_pos, std::function<void (HightlightType, int, int)> sortingVisualize)
+void Merge(int* start, int* mid, int* end, int abs_pos, std::function<void (HightlightType, int, int)> drawSorting)
 {
    int FHsize = mid - start; 
    int SHsize = end - mid; 
@@ -262,7 +274,7 @@ void Merge(int* start, int* mid, int* end, int abs_pos, std::function<void (High
    int SHwalker = 0;
    while(FHwalker < FHsize && SHwalker < SHsize)
    {
-        sortingVisualize(HightlightType::Compare, abs_pos + FHwalker, abs_pos + FHsize + SHwalker);
+        drawSorting(HightlightType::Compare, abs_pos + FHwalker, abs_pos + FHsize + SHwalker);
         if(FHarray[FHwalker] <= SHarray[SHwalker])
         {
             *mergeWalker = FHarray[FHwalker++];
@@ -289,14 +301,83 @@ void Merge(int* start, int* mid, int* end, int abs_pos, std::function<void (High
    delete[] SHarray;
 }
 
-void MergeRec(int* start, int* end, int abs_pos, std::function<void (HightlightType, int, int)> sortingVisualize)
+void MergeRec(int* start, int* end, int abs_pos, std::function<void (HightlightType, int, int)> drawSorting)
 {
    int size = end - start;
    if(size == 1)
       return;
    
    int* mid = start + (size / 2);
-   MergeRec(start, mid, abs_pos, sortingVisualize);
-   MergeRec(mid, end, abs_pos + (size/2), sortingVisualize);
-   Merge(start, mid, end, abs_pos, sortingVisualize);
+   MergeRec(start, mid, abs_pos, drawSorting);
+   MergeRec(mid, end, abs_pos + (size/2), drawSorting);
+   Merge(start, mid, end, abs_pos, drawSorting);
+}
+
+int* Quick(int* start, int* pivot, int* end, int abs_pos, std::function<void (HightlightType, int, int)> drawSorting)
+{
+   int size = end - start;
+   int Lwalker = 0;
+   int Rwalker = size - 1;
+
+   while(Rwalker >= Lwalker && Rwalker > 0)
+   {
+        drawSorting(HightlightType::Compare, abs_pos + Lwalker, abs_pos + pivot - start);
+        drawSorting(HightlightType::Compare, abs_pos + Rwalker, abs_pos + pivot - start);
+
+        if(*(start + Lwalker) > *pivot && *(start + Rwalker) < *pivot)
+        {
+            int temp = *(start + Lwalker);
+            *(start + Lwalker) = *(start + Rwalker);
+            *(start + Rwalker) = temp;
+            drawSorting(HightlightType::Write, abs_pos + Lwalker, abs_pos + Rwalker);
+            Lwalker++;
+            Rwalker--;
+        }
+        else if(*(start + Lwalker) > *pivot && *(start + Rwalker) >= *pivot)
+        {
+            Rwalker--;
+        }
+        else if(*(start + Lwalker) <= *pivot && *(start + Rwalker) < *pivot)
+        {
+            Lwalker++;
+        }
+        else 
+        {
+            Rwalker--;
+            Lwalker++;
+        }
+   }
+
+   if(Lwalker - (pivot - start) == 1 
+      && (pivot - start) - Rwalker == 1)
+      return pivot;
+   
+   if(Lwalker > pivot - start)
+   {
+        int temp = *(start + Rwalker);   
+        *(start + Rwalker) = *pivot;
+        *pivot = temp;
+        drawSorting(HightlightType::Write, abs_pos + Rwalker, pivot - start);
+        return start + Rwalker;
+   }
+   else
+   {
+        int temp = *(start + Lwalker);   
+        *(start + Lwalker) = *pivot;
+        *pivot = temp;
+        drawSorting(HightlightType::Write, abs_pos + Lwalker, pivot - start);
+        return start + Lwalker;
+   }
+}
+
+void QuickRec(int* start, int* end, int abs_pos, std::function<void (HightlightType, int, int)> drawSorting)
+{
+   int size = end - start;
+   if(size <= 1)
+      return;
+   
+   int* mid = start + (size / 2); 
+   int* pivot = Quick(start, mid, end, abs_pos, drawSorting);
+   QuickRec(start, pivot, abs_pos, drawSorting);
+   QuickRec(pivot + 1, end, abs_pos + (pivot - start) + 1, drawSorting);
 }

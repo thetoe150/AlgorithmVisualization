@@ -16,5 +16,5 @@ public:
 
     //helper function
     static void Merge(T* start, T* mid, T* end);
-    static void MergeSort(T* start, T* end);
+    static T* Quick(T* start, T* mid, T* end);
 };

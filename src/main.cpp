@@ -4,11 +4,13 @@
 const int PILLAR_SIZE = 100;
 
 int main(int argc, char *argv[]){
-    //int array[10] = {6,4,2,18,8,1,33,12,7,0};
+    //int array[10] = {6,4,2,18,1,8,33,12,7,0};
     //Sort<int>::Insertion(array, array + 10);
     //Sort<int>::Selection(array, array + 10);
     //Sort<int>::Bubble(array, array + 10);
     //Sort<int>::MergeRec(array, array + 10);
+    //Sort<int>::print(array, array + 10);
+    //Sort<int>::QuickRec(array, array + 10);
     //Sort<int>::print(array, array + 10);
 
     if(argc < 2) return 1;
@@ -30,6 +32,11 @@ int main(int argc, char *argv[]){
         }
         case '4':{
             visualizeSorting(SortType::Merge);
+            break;
+        }
+        case '5':{
+            visualizeSorting(SortType::Quick);
+            break;
         }
     }
     

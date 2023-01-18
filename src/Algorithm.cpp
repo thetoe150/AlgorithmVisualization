@@ -138,5 +138,76 @@ void Sort<T>::MergeRec(T* start, T* end)
    Merge(start, mid, end);
 }
 
+template <typename T>
+void Sort<T>::QuickRec(T* start, T* end)
+{
+   int size = end - start;
+   if(size <= 1)
+      return;
+   
+   T* mid = start + (size / 2); 
+   T* pivot = Quick(start, mid, end);std::cout<<"pivot: "<<pivot - start<<std::endl;
+   print(start, end);
+   QuickRec(start, pivot);
+   QuickRec(pivot + 1, end);
+}
+
+template <typename T>
+T* Sort<T>::Quick(T* start, T* pivot, T* end)
+{
+   int size = end - start;
+   int Lwalker = 0;
+   int Rwalker = size - 1;
+   print(start, end);
+
+   while(Rwalker >= Lwalker && Rwalker > 0)
+   {
+      //std::cout << *pivot<<std::endl;
+      //std::cout << "Rwalker: "<<Rwalker<<", Lwalker: "<<Lwalker<<std::endl;
+      //std::cout << "Rwalker value: "<<*(start + Lwalker)<<", Lwalker value: "<<*(start + Rwalker)<<std::endl;
+      if(*(start + Lwalker) > *pivot && *(start + Rwalker) < *pivot)
+      {
+         int temp = *(start + Lwalker);
+         *(start + Lwalker) = *(start + Rwalker);
+         *(start + Rwalker) = temp;
+
+         Lwalker++;
+         Rwalker--;
+      }
+      else if(*(start + Lwalker) > *pivot && *(start + Rwalker) >= *pivot)
+      {
+         Rwalker--;
+      }
+      else if(*(start + Lwalker) <= *pivot && *(start + Rwalker) < *pivot)
+      {
+         Lwalker++;
+      }
+      else 
+      {
+         Rwalker--;
+         Lwalker++;
+      }
+   }
+
+   if(Lwalker - (pivot - start) == 1 
+      && (pivot - start) - Rwalker == 1)
+      return pivot;
+   
+   if(Lwalker > pivot - start)
+   {
+      int temp = *(start + Rwalker);   
+      *(start + Rwalker) = *pivot;
+      *pivot = temp;
+      return start + Rwalker;
+   }
+   else
+   {
+      int temp = *(start + Lwalker);   
+      *(start + Lwalker) = *pivot;
+      *pivot = temp;
+      return start + Lwalker;
+   }
+}
+
 template class Sort<int>;
 template class Sort<float>;

@@ -209,5 +209,88 @@ T* Sort<T>::Quick(T* start, T* pivot, T* end)
    }
 }
 
+template <typename T>
+void Sort<T>::Heap(T* start, T* end)
+{
+   int size = end - start;
+   for(int i = size - 2; i >= 0; i--)
+   {
+      reheapUp(start, end, i); //print(start, end);
+   }
+
+   for(int i = 0; i < size - 1; i++)
+   {
+      T temp = *(end - 1);
+      *(end - 1) = *(start + i);
+      *(start + i) = temp;
+      reheapDown(start, end, i);
+   }
+}
+
+template <typename T>
+void Sort<T>::reheapUp(T* start, T* end, int reheapIdx)
+{
+   int lastIdx = end - start - 1;
+   int reheapToLast = lastIdx - reheapIdx;
+   T* lastEle = end - 1;
+   T* reheapEle = lastEle - reheapToLast;
+
+   while(reheapToLast > 0)
+   {
+      T* parentEle = lastEle - (reheapToLast - 1)/2; //std::cout<<"parent: "<<*parentEle<<"  reheap: "<<*reheapEle<<std::endl;
+      if(*reheapEle < *parentEle)
+      {
+         T temp = *reheapEle;
+         *reheapEle = *parentEle;
+         *parentEle = temp;
+         reheapEle = parentEle;
+         reheapToLast = (reheapToLast - 1)/2;
+      }
+      else break;
+   }
+}
+
+template <typename T>
+void Sort<T>::reheapDown(T* start, T* end, int ignoreEle)
+{
+   int lastIdx = end - start - 1;  //consider last Idx of the array as root and as index 0
+   int finalHeapEleToLast = lastIdx - ignoreEle - 1;
+
+   int parentIdxToLast = 0;
+   int leftIdxToLast = parentIdxToLast * 2 + 1;
+   int rightIdxToLast = parentIdxToLast * 2 + 2;
+   T* lastEle = end - 1;
+
+   while(leftIdxToLast <= finalHeapEleToLast)
+   {
+      int largest = parentIdxToLast;
+
+      if(*(lastEle - leftIdxToLast) < *(lastEle - largest)) 
+      {
+         largest = leftIdxToLast;
+      }
+
+      if(rightIdxToLast < finalHeapEleToLast
+       && *(lastEle - rightIdxToLast) < *(lastEle - largest)) 
+      {
+         largest = rightIdxToLast;
+      }
+
+      if(largest != parentIdxToLast)
+      {
+         T temp = *(lastEle - largest);
+         *(lastEle - largest) = *(lastEle - parentIdxToLast);
+         *(lastEle - parentIdxToLast) = temp;
+
+         parentIdxToLast = largest;
+         leftIdxToLast = parentIdxToLast * 2 + 1;
+         rightIdxToLast = parentIdxToLast * 2 + 2;
+
+      }
+      else break;
+
+   }
+}
+
 template class Sort<int>;
 template class Sort<float>;

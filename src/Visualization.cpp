@@ -11,7 +11,7 @@ void visualizeSorting(SortType type)
     long int compareCount = 0;
     long int writeArrayCount = 0;
     sf::RenderWindow window(sf::VideoMode(1250, 850), "algorithm visualization");
-    window.setFramerateLimit(60);
+    window.setFramerateLimit(20);
 
     //setup font and sort info
     sf::Font sortfont;
@@ -53,6 +53,12 @@ void visualizeSorting(SortType type)
         case SortType::Quick:
         {
             sorttype.setString("quick sort");
+            break;
+        }
+        
+        case SortType::Heap:
+        {
+            sorttype.setString("heap sort");
             break;
         }
     }
@@ -175,6 +181,12 @@ void visualizeSorting(SortType type)
             QuickRec(pillars_value, pillars_value + pillar_size, 0, drawSorting);
             break;
         }
+
+        case SortType::Heap:
+        {
+            Heap(pillars_value, pillars_value + pillar_size, drawSorting);
+            break;
+        }
     }
 }
 
@@ -289,11 +301,13 @@ void Merge(int* start, int* mid, int* end, int abs_pos, std::function<void (High
     while(FHwalker < FHsize) 
     {
         *mergeWalker = FHarray[FHwalker++];
+        drawSorting(HightlightType::Write, abs_pos + FHwalker, abs_pos + FHsize);
         mergeWalker++;
     }
     while(SHwalker < SHsize)
     {
         *mergeWalker = SHarray[SHwalker++];
+        drawSorting(HightlightType::Write, abs_pos + FHwalker + SHwalker, abs_pos + FHsize + SHwalker);
         mergeWalker++;
     }
 
@@ -357,7 +371,7 @@ int* Quick(int* start, int* pivot, int* end, int abs_pos, std::function<void (Hi
         int temp = *(start + Rwalker);   
         *(start + Rwalker) = *pivot;
         *pivot = temp;
-        drawSorting(HightlightType::Write, abs_pos + Rwalker, pivot - start);
+        drawSorting(HightlightType::Write, abs_pos + Rwalker, abs_pos + pivot - start);
         return start + Rwalker;
    }
    else
@@ -365,7 +379,7 @@ int* Quick(int* start, int* pivot, int* end, int abs_pos, std::function<void (Hi
         int temp = *(start + Lwalker);   
         *(start + Lwalker) = *pivot;
         *pivot = temp;
-        drawSorting(HightlightType::Write, abs_pos + Lwalker, pivot - start);
+        drawSorting(HightlightType::Write, abs_pos + Lwalker, abs_pos + pivot - start);
         return start + Lwalker;
    }
 }
@@ -380,4 +394,91 @@ void QuickRec(int* start, int* end, int abs_pos, std::function<void (HightlightT
    int* pivot = Quick(start, mid, end, abs_pos, drawSorting);
    QuickRec(start, pivot, abs_pos, drawSorting);
    QuickRec(pivot + 1, end, abs_pos + (pivot - start) + 1, drawSorting);
+}
+
+void reheapUp(int* start, int* end, int reheapIdx, std::function<void (HightlightType, int, int)> compareVisualize)
+{
+    int lastIdx = end - start - 1;
+    int reheapToLast = lastIdx - reheapIdx;
+    int* lastEle = end - 1;
+    int* reheapEle = lastEle - reheapToLast;
+
+    while(reheapToLast > 0)
+    {
+        int* parentEle = lastEle - (reheapToLast - 1)/2; //std::cout<<"parent: "<<*parentEle<<"  reheap: "<<*reheapEle<<std::endl;
+        compareVisualize(HightlightType::Compare, lastIdx - reheapToLast, lastIdx - (reheapToLast - 1)/2);
+        if(*reheapEle < *parentEle)
+        {
+            int temp = *reheapEle;
+            *reheapEle = *parentEle;
+            *parentEle = temp;
+            compareVisualize(HightlightType::Write, lastIdx - reheapToLast, lastIdx - (reheapToLast - 1)/2);
+            reheapEle = parentEle;
+            reheapToLast = (reheapToLast - 1)/2;
+        }
+        else break;
+    } 
+}
+
+void reheapDown(int* start, int* end, int ignoreEle, std::function<void (HightlightType, int, int)> compareVisualize)
+{
+    int lastIdx = end - start - 1;  //consider last Idx of the array as root and as index 0
+    int finalHeapEleToLast = lastIdx - ignoreEle - 1;
+
+    int parentIdxToLast = 0;
+    int leftIdxToLast = parentIdxToLast * 2 + 1;
+    int rightIdxToLast = parentIdxToLast * 2 + 2;
+    int* lastEle = end - 1;
+
+    while(leftIdxToLast <= finalHeapEleToLast)
+    {
+        int largest = parentIdxToLast;
+
+        compareVisualize(HightlightType::Compare, lastIdx - largest, lastIdx - leftIdxToLast);
+        if(*(lastEle - leftIdxToLast) < *(lastEle - largest)) 
+        {
+            largest = leftIdxToLast;
+        }
+
+        compareVisualize(HightlightType::Compare, lastIdx - largest, lastIdx - rightIdxToLast);
+        if(rightIdxToLast < finalHeapEleToLast
+        && *(lastEle - rightIdxToLast) < *(lastEle - largest)) 
+        {
+            largest = rightIdxToLast;
+        }
+
+        if(largest != parentIdxToLast)
+        {
+            int temp = *(lastEle - largest);
+            *(lastEle - largest) = *(lastEle - parentIdxToLast);
+            *(lastEle - parentIdxToLast) = temp;
+            compareVisualize(HightlightType::Write, lastIdx - largest, lastIdx - parentIdxToLast);
+
+            parentIdxToLast = largest;
+            leftIdxToLast = parentIdxToLast * 2 + 1;
+            rightIdxToLast = parentIdxToLast * 2 + 2;
+
+        }
+        else break;
+
+    }
+
+}
+void Heap(int* start, int* end, std::function<void (HightlightType, int, int)> compareVisualize)
+{
+    int size = end - start;
+    for(int i = size - 2; i >= 0; i--)
+    {
+        reheapUp(start, end, i, compareVisualize); //print(start, end);
+    }
+
+    for(int i = 0; i < size - 1; i++)
+    {
+        int temp = *(end - 1);
+        *(end - 1) = *(start + i);
+        *(start + i) = temp;
+        compareVisualize(HightlightType::Write, i, end - start - 1);
+        reheapDown(start, end, i, compareVisualize);
+    }
+
 }

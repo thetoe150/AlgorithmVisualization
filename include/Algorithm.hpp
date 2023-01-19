@@ -17,4 +17,6 @@ public:
     //helper function
     static void Merge(T* start, T* mid, T* end);
     static T* Quick(T* start, T* mid, T* end);
+    static void reheapUp(T* start, T* end, int reheapIndex);
+    static void reheapDown(T* start, T* end, int reheapIndex);
 };

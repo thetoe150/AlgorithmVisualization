@@ -15,6 +15,7 @@ public:
     static void Heap(T* start, T* end);
 
     //helper function
+    static void ShellSteps(T* start, T* end, int step);
     static void Merge(T* start, T* mid, T* end);
     static T* Quick(T* start, T* mid, T* end);
     static void reheapUp(T* start, T* end, int reheapIndex);

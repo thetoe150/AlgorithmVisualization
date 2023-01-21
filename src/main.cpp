@@ -22,26 +22,27 @@ int main(int argc, char *argv[]){
             visualizeSorting(SortType::Selection);
             break;
         }
-
         case '2':{
             visualizeSorting(SortType::Insertion);
             break;
         }
-            
         case '3':{
             visualizeSorting(SortType::Bubble);
             break;
         }
         case '4':{
-            visualizeSorting(SortType::Merge);
+            visualizeSorting(SortType::Shell);
             break;
         }
         case '5':{
+            visualizeSorting(SortType::Merge);
+            break;
+        }
+        case '6':{
             visualizeSorting(SortType::Quick);
             break;
         }
-
-        case '6':{
+        case '7':{
             visualizeSorting(SortType::Heap);
             break;
         }

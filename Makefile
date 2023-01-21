@@ -13,13 +13,13 @@ EXE_LFLAGS = -Wall -std=c++14 -g -Llib/SFML -lsfml-graphics -lsfml-window -lsfml
 #Linker flags for dynamic exe build
 EXE_LDFLAGS = $(EXE_LFLAGS) -Lbin -lDSA
 #Linker flags for DLL build
-DLL_LDFLAGS = -shared
+DLL_LDFLAGS = $(EXE_LFLAGS) -shared
 
 #obj/DataStructure.o obj/Algorithm.o obj/main.o
 ####### OBJECTS #######
 SRC_DIR = ./src/*
 SRC_FILE = $(wildcard src/*.cpp)
-DLL_OBJECTS = obj/DataStructure.o obj/Algorithm.o
+DLL_OBJECTS = obj/DataStructure.o obj/Algorithm.o obj/Visualization.o
 #replace src/*.cpp to obj/*.o
 STATIC_EXE_OBJECTS =$(patsubst src/%, obj/%, $(patsubst %.cpp, %.o, $(SRC_FILE)))
 DYNAMIC_EXE_OBJECTS = obj/main.o
@@ -34,7 +34,7 @@ list_object_file:
 
 ####### dynamic build run #######
 dbr: bin/$(DLL) bin/$(DYNAMIC_EXE)
-	./bin/DLLsample.exe
+	./bin/DLLsample.exe 6
 
 ####### static build run #######
 sbr: bin/$(STATIC_EXE)

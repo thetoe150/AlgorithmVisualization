@@ -7,6 +7,7 @@ enum class SortType
     Insertion,
     Selection,
     Bubble,
+    Shell,
     Merge,
     Quick,
     Heap

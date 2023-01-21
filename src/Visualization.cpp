@@ -11,7 +11,7 @@ void visualizeSorting(SortType type)
     long int compareCount = 0;
     long int writeArrayCount = 0;
     sf::RenderWindow window(sf::VideoMode(1250, 850), "algorithm visualization");
-    window.setFramerateLimit(20);
+    window.setFramerateLimit(40);
 
     //setup font and sort info
     sf::Font sortfont;

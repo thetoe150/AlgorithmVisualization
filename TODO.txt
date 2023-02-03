@@ -1,0 +1,6 @@
+Shell sort
+add sound
+random number every run
+benchmark sort types performance
+save/load sorting stage to Json file
+make code clean

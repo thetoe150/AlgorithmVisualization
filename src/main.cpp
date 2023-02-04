@@ -15,34 +15,44 @@ int main(int argc, char *argv[]){
     //Sort<int>::Heap(array, array + 10);
     //Sort<int>::print(array, array + 10);
 
+    std::unordered_map<std::string, SortType> sortMap;
+    sortMap["Insertion"] = SortType::Insertion;
+    sortMap["Selection"] = SortType::Selection;
+    sortMap["Bubble"] = SortType::Bubble;
+    sortMap["Shell"] = SortType::Shell;
+    sortMap["Merge"] = SortType::Merge;
+    sortMap["Quick"] = SortType::Quick;
+    sortMap["Heap"] = SortType::Heap;
+
     if(argc < 2) return 1;
-    switch(argv[1][0])
+    std::string sortTypeStr(argv[1]);
+    switch(sortMap[sortTypeStr])
     {
-        case '1':{
+        case SortType::Selection:{
             visualizeSorting(SortType::Selection);
             break;
         }
-        case '2':{
+        case SortType::Insertion:{
             visualizeSorting(SortType::Insertion);
             break;
         }
-        case '3':{
+        case SortType::Bubble:{
             visualizeSorting(SortType::Bubble);
             break;
         }
-        case '4':{
+        case SortType::Shell:{
             visualizeSorting(SortType::Shell);
             break;
         }
-        case '5':{
+        case SortType::Merge:{
             visualizeSorting(SortType::Merge);
             break;
         }
-        case '6':{
+        case SortType::Quick:{
             visualizeSorting(SortType::Quick);
             break;
         }
-        case '7':{
+        case SortType::Heap:{
             visualizeSorting(SortType::Heap);
             break;
         }

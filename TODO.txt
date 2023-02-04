@@ -1,4 +1,5 @@
 Shell sort
+fix the data write and comparation count
 add sound
 random number every run
 benchmark sort types performance

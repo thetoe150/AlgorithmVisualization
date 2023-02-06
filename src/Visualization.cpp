@@ -3,10 +3,41 @@
 const float PILLAR_WIDTH = 10.f; 
 const float PILLAR_HEIGHT = 6.f;
 const int PILLAR_SIZE = 100;  
-const int FRAME_RATE = 60;
+const int FRAME_RATE = 100;
 
-void visualizeSorting(SortType type)
+static inline sf::Font ConfigFont();
+static inline void SetSortNameText(sf::Text& sorttype, SortType type);
+static inline void RandomizePillarVal(int* pillars_value);
+static inline void ConfigSound(sf::Sound& sound, sf::SoundBuffer& buffer, const std::string& src);
+
+static inline void ConfigSound(sf::Sound& sound, sf::SoundBuffer& buffer, const std::string& src)
 {
+    if(!buffer.loadFromFile(src))
+        std::cout<<"fail to load sound source"<<std::endl;
+        
+    int sampleCount = buffer.getSampleCount();
+    const int16_t *sampleArr = new int16_t[sampleCount];
+    sampleArr = buffer.getSamples();
+
+    for(int i = 0; i < sampleCount; i++)
+    {
+        std::cout<<sampleArr[i]<<" ";
+    }
+
+    sound.setBuffer(buffer);
+    sound.setVolume(50);
+    //sound.setPitch(0.01);
+    //sound.play();
+
+    std::cout<<"Sample rate: "<< buffer.getSampleRate()<<std::endl;
+}
+
+void VisualizeSorting(SortType type)
+{
+    sf::Sound sound;
+    sf::SoundBuffer buffer;
+    std::string src = "res/goofy-ahh.wav";
+    ConfigSound(sound, buffer, src);
 
     long int compareCount = 0;
     long int writeArrayCount = 0;
@@ -17,11 +48,11 @@ void visualizeSorting(SortType type)
     sf::Font sortFont = ConfigFont();
     
     sf::Text sortNameText("default", sortFont, 15);
-    SetSortNameText(sortNameText, sortFont, type);
+    SetSortNameText(sortNameText, type);
 
     //random array values
     int pillars_value[PILLAR_SIZE] = {0};
-    randomizePillarVal(pillars_value);
+    RandomizePillarVal(pillars_value);
 
     //sort<int>::mergerec(pillars_value, pillars_value + pillar_size);
     //sort<int>::print(pillars_value, pillars_value + pillar_size);
@@ -37,6 +68,7 @@ void visualizeSorting(SortType type)
 
     auto compareTextVisual = [&compareCount, &sortFont]() -> sf::Text
     { 
+        
         sf::Text compareCountNum("data reading and comparing count: " + std::to_string(compareCount), sortFont, 15);
         compareCountNum.setPosition(100, 50); 
         return compareCountNum;
@@ -61,6 +93,9 @@ void visualizeSorting(SortType type)
                     window.close();
             }
 
+            sound.setPitch(0.01 * pillars_value[swapele2]);
+            sound.play();
+    
             window.clear();
             
             for(unsigned int i = 0; i < pillars.size(); i++)
@@ -147,7 +182,7 @@ static inline sf::Font ConfigFont()
     return sortfont;
 }
 
-static inline void SetSortNameText(sf::Text& sorttype, sf::Font font, SortType type)
+static inline void SetSortNameText(sf::Text& sorttype, SortType type)
 {
     sorttype.setStyle(sf::Text::Regular);
     sorttype.setPosition(100, 20);
@@ -197,7 +232,7 @@ static inline void SetSortNameText(sf::Text& sorttype, sf::Font font, SortType t
     }
 }
 
-void randomizePillarVal(int* pillars_value)
+static inline void RandomizePillarVal(int* pillars_value)
 {
 
     std::array<int, PILLAR_SIZE> arr;

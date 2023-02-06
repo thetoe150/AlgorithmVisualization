@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <cstdint>
 #include <algorithm>
 #include <random>
 #include <functional>
@@ -9,6 +10,7 @@
 #include <unordered_map>
 
 #include "SFML/Graphics.hpp"
+#include "SFML/Audio.hpp"
 #include "Algorithm.hpp"
 #include "SFML/OpenGL.hpp"
 

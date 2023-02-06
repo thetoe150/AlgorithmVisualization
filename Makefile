@@ -9,7 +9,7 @@ DLL_CFLAGS = $(EXE_CFLAGS) -fPIC
 
 ####### Linker flags #######
 #Linker flags for static exe build
-EXE_LFLAGS = -Wall -Wextra -std=c++14 -g -Llib/SFML -lsfml-graphics -lsfml-window -lsfml-system -lopengl32
+EXE_LFLAGS = -Wall -Wextra -std=c++14 -g -Llib/SFML -lsfml-graphics -lsfml-audio -lsfml-window -lsfml-system -lopengl32
 #Linker flags for dynamic exe build
 EXE_LDFLAGS = $(EXE_LFLAGS) -Lbin -lDSA
 #Linker flags for DLL build

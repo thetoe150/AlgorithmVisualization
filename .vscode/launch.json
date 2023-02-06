@@ -9,6 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/bin/SLLsample.exe",
+            "args": ["Heap"],
             "MIMode": "gdb",
             "cwd": "${workspaceFolder}",
             "miDebuggerPath": "C:\\MinGW\\bin\\gdb.exe",

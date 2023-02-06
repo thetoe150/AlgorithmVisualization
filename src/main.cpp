@@ -29,31 +29,31 @@ int main(int argc, char *argv[]){
     switch(sortMap[sortTypeStr])
     {
         case SortType::Selection:{
-            visualizeSorting(SortType::Selection);
+            VisualizeSorting(SortType::Selection);
             break;
         }
         case SortType::Insertion:{
-            visualizeSorting(SortType::Insertion);
+            VisualizeSorting(SortType::Insertion);
             break;
         }
         case SortType::Bubble:{
-            visualizeSorting(SortType::Bubble);
+            VisualizeSorting(SortType::Bubble);
             break;
         }
         case SortType::Shell:{
-            visualizeSorting(SortType::Shell);
+            VisualizeSorting(SortType::Shell);
             break;
         }
         case SortType::Merge:{
-            visualizeSorting(SortType::Merge);
+            VisualizeSorting(SortType::Merge);
             break;
         }
         case SortType::Quick:{
-            visualizeSorting(SortType::Quick);
+            VisualizeSorting(SortType::Quick);
             break;
         }
         case SortType::Heap:{
-            visualizeSorting(SortType::Heap);
+            VisualizeSorting(SortType::Heap);
             break;
         }
     }

@@ -39,6 +39,17 @@ dbr: bin/$(DLL) bin/$(DYNAMIC_EXE)
 ####### static build run #######
 sbr: bin/$(STATIC_EXE)
 	
+################ for sound visualize ###########################
+sound_visualize: bin/SoundVisualizer.exe
+	./bin/SoundVisualizer.exe res/goofy-ahh.wav
+
+bin/SoundVisualizer.exe: other/SoundVisualizer.o
+	$(CC) $^ -o $@ $(EXE_LFLAGS)
+
+other/SoundVisualizer.o: other/SoundVisualizer.cpp
+	$(CC) -c $^ -o $@ $(EXE_CFLAGS)
+###############################################################
+
 
 ####### dynamic EXE link rule #######
 bin/$(DYNAMIC_EXE): $(DYNAMIC_EXE_OBJECTS) | bin

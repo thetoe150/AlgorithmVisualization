@@ -2,42 +2,73 @@
 
 const float PILLAR_WIDTH = 10.f; 
 const float PILLAR_HEIGHT = 6.f;
-const int PILLAR_SIZE = 100;  
-const int FRAME_RATE = 100;
+const int PILLAR_SIZE = 100;
+const int FRAME_RATE = 40;
+const int SOUND_POOL_SIZE = 20;
+const float LOWEST_PITCH = 0.25;
+const float PITCH_COEFFICIENT = 0.01;
 
 static inline sf::Font ConfigFont();
 static inline void SetSortNameText(sf::Text& sorttype, SortType type);
 static inline void RandomizePillarVal(int* pillars_value);
-static inline void ConfigSound(sf::Sound& sound, sf::SoundBuffer& buffer, const std::string& src);
+static inline void ConfigSound(sf::Sound soundPool[], sf::SoundBuffer& buffer, const std::string& src);
+static inline void PlaySoundFromPool(sf::Sound soundPool[], float pitch);
 
-static inline void ConfigSound(sf::Sound& sound, sf::SoundBuffer& buffer, const std::string& src)
+static inline void ConfigSound(sf::Sound soundPool[], sf::SoundBuffer& buffer, const std::string& src)
 {
     if(!buffer.loadFromFile(src))
         std::cout<<"fail to load sound source"<<std::endl;
         
-    int sampleCount = buffer.getSampleCount();
-    const int16_t *sampleArr = new int16_t[sampleCount];
-    sampleArr = buffer.getSamples();
+    //int sampleCount = buffer.getSampleCount();
+    //const int16_t *sampleArr = new int16_t[sampleCount];
+    //sampleArr = buffer.getSamples();
 
-    for(int i = 0; i < sampleCount; i++)
-    {
-        std::cout<<sampleArr[i]<<" ";
-    }
+    //for(int i = 0; i < sampleCount; i++)
+    //{
+        //std::cout<<sampleArr[i]<<" ";
+    //}
 
-    sound.setBuffer(buffer);
-    sound.setVolume(50);
+    //std::cout <<"sound.getLoop(): "<<sound.getLoop() << std::endl;
+    std::cout <<"buffer.getDuration(): " <<buffer.getDuration().asMicroseconds() << std::endl;
     //sound.setPitch(0.01);
-    //sound.play();
+    for(int i = 0; i < SOUND_POOL_SIZE; i++)
+    {
+        soundPool[i].setBuffer(buffer);
+        soundPool[i].setVolume(50);
+    }
 
     std::cout<<"Sample rate: "<< buffer.getSampleRate()<<std::endl;
 }
 
+static inline void PlaySoundFromPool(sf::Sound soundPool[], float pitch)
+{
+    int idle = 0;
+    for(int i = 0; i < SOUND_POOL_SIZE; i++)
+    {
+        //only play sound that not has been playing
+        if(soundPool[i].getStatus() == sf::SoundSource::Status::Playing)
+        {
+            if(soundPool[i].getPitch() == pitch)
+                return;
+        }
+        if(soundPool[i].getStatus() == sf::SoundSource::Status::Stopped)
+        {
+            idle = i;
+        }
+
+    }
+    soundPool[idle].setPitch(pitch);
+    soundPool[idle].play();
+    //std::cout  <<pitch<<" ";
+}
+
 void VisualizeSorting(SortType type)
 {
-    sf::Sound sound;
+    sf::Sound sounds[SOUND_POOL_SIZE];
     sf::SoundBuffer buffer;
     std::string src = "res/goofy-ahh.wav";
-    ConfigSound(sound, buffer, src);
+    ConfigSound(sounds, buffer, src);
+
 
     long int compareCount = 0;
     long int writeArrayCount = 0;
@@ -93,8 +124,13 @@ void VisualizeSorting(SortType type)
                     window.close();
             }
 
-            sound.setPitch(0.01 * pillars_value[swapele2]);
-            sound.play();
+            if(hightlighttype == HightlightType::Compare)
+            {
+                PlaySoundFromPool(sounds, LOWEST_PITCH + PITCH_COEFFICIENT * pillars_value[swapele1]);
+                PlaySoundFromPool(sounds, LOWEST_PITCH + PITCH_COEFFICIENT * pillars_value[swapele2]);
+            }
+            //else 
+                //PlaySoundFromPool(sounds, 0.01 * pillars_value[swapele2]);
     
             window.clear();
             

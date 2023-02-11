@@ -7,6 +7,7 @@ const int FRAME_RATE = 40;
 const int SOUND_POOL_SIZE = 20;
 const float LOWEST_PITCH = 0.25;
 const float PITCH_COEFFICIENT = 0.01;
+const static int SHELL_STEP_ARRAY[] = {7, 5, 3, 2, 1};
 
 static inline sf::Font ConfigFont();
 static inline void SetSortNameText(sf::Text& sorttype, SortType type);
@@ -184,6 +185,7 @@ void VisualizeSorting(SortType type)
 
         case SortType::Shell:
         {
+            Shell(pillars_value, pillars_value + PILLAR_SIZE, SHELL_STEP_ARRAY, sizeof(SHELL_STEP_ARRAY) / sizeof(int), drawSorting);
             break;
         }
         
@@ -204,6 +206,10 @@ void VisualizeSorting(SortType type)
             Heap(pillars_value, pillars_value + PILLAR_SIZE, drawSorting);
             break;
         }
+    }
+    for(int i = 0; i < PILLAR_SIZE; i++)
+    {
+        std::cout << pillars_value[i] << " ";
     }
 }
 
@@ -245,6 +251,7 @@ static inline void SetSortNameText(sf::Text& sorttype, SortType type)
 
         case SortType::Shell:
         {
+            sorttype.setString("shell sort");
             break;
         }
 
@@ -284,6 +291,5 @@ static inline void RandomizePillarVal(int* pillars_value)
     for(int i = 0; i < PILLAR_SIZE; i++)
     {
         pillars_value[i] = arr[i];
-        std::cout << pillars_value[i] << " ";
     }
 }

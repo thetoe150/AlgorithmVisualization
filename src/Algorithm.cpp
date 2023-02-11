@@ -74,6 +74,32 @@ void Sort<T>::Bubble(T* start, T* end)
    }
 }
 
+
+template <typename T>
+void Sort<T>::Shell(T* start, T* end, T* step_arr, int step_arr_size)
+{
+   int size = end - start;
+   
+   for(int si = 0; si < step_arr_size; si++)
+   {
+      int step = step_arr[si];
+      for(int subarr_i = 0; subarr_i < step; subarr_i++)
+      {
+         for(int i = subarr_i + step; i < size; i += step)
+         {
+            int temp = *(start + i);
+            int j = i;
+            while(j - step >= 0 && *(start + j - step) > temp)
+            {
+               *(start + j) = *(start + j - step);
+               j -= step;
+            }
+            *(start + j) = temp;
+         }
+      }
+   }
+}
+
 //TODO: write description
 template <typename T>
 void Sort<T>::Merge(T* start, T* mid, T* end)
@@ -289,6 +315,42 @@ void Sort<T>::reheapDown(T* start, T* end, int ignoreEle)
       }
       else break;
 
+   }
+}
+
+template <typename T>
+void Sort<T>::ShittyShell(T* start, T* end, T* step_arr, int step_arr_size)
+{
+   int size = end - start;
+   
+   for(int si = 0; si < step_arr_size; si++)
+   {
+      int step = step_arr[si];
+      for(int i_sorted = 0; i_sorted < size; i_sorted += step)
+      {
+         for(int i_subarr = i_sorted; i_subarr < i_sorted + step; i_subarr++)
+         {
+            int min = *(start + i_subarr);
+            int min_idx = i_subarr;
+            bool min_flag = false;
+            for(int i = i_subarr + step; i < size; i += step)
+            {
+               if(*(start + i) < min)
+               {
+                  min = *(start + i);
+                  min_idx = i;
+                  min_flag = true;
+               }
+            }  
+            if(min_flag)
+            {
+               *(start + min_idx) = *(start + i_subarr);
+               *(start + i_subarr) = min;
+            }
+
+         }
+         print(start, end);
+      }
    }
 }
 

@@ -1,5 +1,11 @@
 #include "Visualization.hpp"
 
+
+static inline void Merge(int* start, int* mid, int* end, int abs_pos, std::function<void (HightlightType, int, int)> compareVisualize);
+static inline int* Quick(int* start, int* pivot, int* end, int abs_pos, std::function<void (HightlightType, int, int)> compareVisualize);
+static inline void reheapUp(int* start, int* end, int reheapIdx, std::function<void (HightlightType, int, int)> compareVisualize);
+static inline void reheapDown(int* start, int* end, int reheapIdx, std::function<void (HightlightType, int, int)> compareVisualize);
+
 void printresult(int* start, int* end)
 {
     while(start != end)
@@ -24,10 +30,15 @@ void Insertion(int* start, int* end, std::function<void (HightlightType, int, in
             *(start + j) = *(start + j - 1);
             j--;
         }
-        *(start + j) = temp;
-        *(start + i) = max_temp;
-        drawSorting(HightlightType::Write, j, j);
-        drawSorting(HightlightType::Write, i, i);
+
+        // the "if" is in case start[i] is already bigger than start[j]
+        if(max_temp > temp)
+        {
+            *(start + j) = temp;
+            *(start + i) = max_temp;
+        }
+        //drawSorting(HightlightType::Write, j, j);
+        drawSorting(HightlightType::Compare, j, i);
     }
 }
 
@@ -78,6 +89,38 @@ void Bubble(int* start, int* end, std::function<void (HightlightType, int, int)>
         }
         if(sorted) break;
     }
+}
+
+void Shell(int* start, int* end, const int* step_arr, int step_arr_size, std::function<void (HightlightType, int, int)> drawSorting)
+{
+   int size = end - start;
+   
+   for(int si = 0; si < step_arr_size; si++)
+   {
+      int step = step_arr[si];
+      for(int subarr_i = 0; subarr_i < step; subarr_i++)
+      {
+         for(int i = subarr_i + step; i < size; i += step)
+         {
+            int temp = *(start + i);
+            int j = i - step;
+            int max_temp = *(start + j);
+            while(j - step >= 0 && *(start + j - step) > temp)
+            {
+               *(start + j) = *(start + j - step);
+               j -= step;
+                drawSorting(HightlightType::Compare, j, i);
+            }
+            if(max_temp > temp)
+            {
+               *(start + j) = temp;
+               *(start + i) = max_temp;
+            }
+            drawSorting(HightlightType::Compare, j, i);
+
+         }
+      }
+   }
 }
 
 void Merge(int* start, int* mid, int* end, int abs_pos, std::function<void (HightlightType, int, int)> drawSorting)
@@ -296,5 +339,40 @@ void Heap(int* start, int* end, std::function<void (HightlightType, int, int)> c
         compareVisualize(HightlightType::Write, i, end - start - 1);
         reheapDown(start, end, i, compareVisualize);
     }
+}
 
+
+//Shell - Selection Hybrid
+void ShittyShell(int* start, int* end, const int* step_arr, int step_arr_size, std::function<void (HightlightType, int, int)> drawSorting)
+{
+   int size = end - start;
+   
+   for(int si = 0; si < step_arr_size; si++)
+   {
+        int step = step_arr[si];
+        for(int i_sorted = 0; i_sorted < size; i_sorted += step)
+        {
+            for(int i_subarr = i_sorted; i_subarr < i_sorted + step; i_subarr++)
+            {
+                int min = *(start + i_subarr);
+                int min_idx = i_subarr;
+                bool min_flag = false;
+                for(int i = i_subarr + step; i < size; i += step)
+                {
+                    drawSorting(HightlightType::Compare, i_subarr, i);
+                    if(*(start + i) < min)
+                    {
+                        min = *(start + i);
+                        min_idx = i;
+                        min_flag = true;
+                    }
+                }  
+                if(min_flag)
+                {
+                    *(start + min_idx) = *(start + i_subarr);
+                    *(start + i_subarr) = min;
+                }
+            }
+        }
+   }
 }

@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <algorithm>
 #include <random>
+#include <chrono>
 #include <functional>
 #include <string>
 #include <array>
@@ -22,7 +23,8 @@ enum class SortType
     Shell,
     Merge,
     Quick,
-    Heap
+    Heap,
+    Bogo
 };
 
 enum class HightlightType

@@ -3,7 +3,7 @@
 const float PILLAR_WIDTH = 10.f; 
 const float PILLAR_HEIGHT = 6.f;
 const int PILLAR_SIZE = 100;
-const int FRAME_RATE = 40;
+const int FRAME_RATE = 60;
 const int SOUND_POOL_SIZE = 20;
 const float LOWEST_PITCH = 0.25;
 const float PITCH_COEFFICIENT = 0.01;
@@ -206,7 +206,15 @@ void VisualizeSorting(SortType type)
             Heap(pillars_value, pillars_value + PILLAR_SIZE, drawSorting);
             break;
         }
+        
+        case SortType::Bogo:
+        {
+            Bogo(pillars_value, pillars_value + PILLAR_SIZE, drawSorting);
+            break;
+        }
     }
+
+    std::cout<<"Sorted array: "<<std::endl;
     for(int i = 0; i < PILLAR_SIZE; i++)
     {
         std::cout << pillars_value[i] << " ";
@@ -272,24 +280,35 @@ static inline void SetSortNameText(sf::Text& sorttype, SortType type)
             sorttype.setString("heap sort");
             break;
         }
+
+        case SortType::Bogo:
+        {
+            sorttype.setString("bogo sort");
+            break;
+        }
     }
 }
 
 static inline void RandomizePillarVal(int* pillars_value)
 {
-
     std::array<int, PILLAR_SIZE> arr;
     for(int i = 0; i < PILLAR_SIZE; i++)
     {
         arr[i] = i + 1;
     }
 
-    std::random_device rd;
-    std::mt19937 prng(rd());
+    time_t tt = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+    std::cout <<"current time: "<< tt <<std::endl;
+
+    std::mt19937 prng(static_cast<std::mt19937::result_type>(tt));
     std::shuffle(arr.begin(), arr.end(), prng);
 
+
+    std::cout<<"Original array: "<<std::endl;
     for(int i = 0; i < PILLAR_SIZE; i++)
     {
         pillars_value[i] = arr[i];
+        std::cout<<pillars_value[i] << " ";
     }
+    std::cout<<std::endl;
 }

@@ -5,6 +5,7 @@ static inline void Merge(int* start, int* mid, int* end, int abs_pos, std::funct
 static inline int* Quick(int* start, int* pivot, int* end, int abs_pos, std::function<void (HightlightType, int, int)> compareVisualize);
 static inline void reheapUp(int* start, int* end, int reheapIdx, std::function<void (HightlightType, int, int)> compareVisualize);
 static inline void reheapDown(int* start, int* end, int reheapIdx, std::function<void (HightlightType, int, int)> compareVisualize);
+static inline bool checkBogo(int* start, int* end, std::function<void (HightlightType, int, int)> compareVisualize);
 
 void printresult(int* start, int* end)
 {
@@ -375,4 +376,50 @@ void ShittyShell(int* start, int* end, const int* step_arr, int step_arr_size, s
             }
         }
    }
+}
+
+
+void Bogo(int* start, int* end, std::function<void (HightlightType, int, int)> compareVisualize)
+{
+    using std::chrono::high_resolution_clock;
+    using std::chrono::duration;
+    using std::chrono::duration_cast;
+    using std::chrono::milliseconds;
+
+    //duration<double, std::milli> ms_double = t2 - t1;
+    auto t_begin_hi = high_resolution_clock::now();
+    std::array<int, 100> arr;
+    for(int i = 0; i < 100; i++)
+    {
+        arr[i] = *(start + i);
+    }
+
+    while(!checkBogo(start, end, compareVisualize))
+    {
+        auto ms_int = duration_cast<milliseconds>(high_resolution_clock::now() - t_begin_hi);
+        std::cout <<"current time: "<< ms_int.count() <<std::endl;
+
+        std::mt19937 prng(static_cast<std::mt19937::result_type>(ms_int.count()));
+        std::shuffle(arr.begin(), arr.end(), prng);
+
+        for(int i = 0; i < 100; i++)
+        {
+            *(start + i) = arr[i];
+        }
+    }   
+
+}
+
+static inline bool checkBogo(int *start, int *end, std::function<void (HightlightType, int, int)> compareVisualize)
+{
+    int* first_ele = start;
+    while(start != end - 1)
+    {
+        compareVisualize(HightlightType::Compare, start - first_ele, start - first_ele + 1);
+        if(*start > *(start + 1))
+            return false;
+
+        start++;
+    }
+    return true;
 }

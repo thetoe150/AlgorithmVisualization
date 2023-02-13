@@ -8,3 +8,5 @@ void Shell(int* start, int* end, const int* step_arr, int step_arr_size, std::fu
 void MergeRec(int* start, int* end, int abs_pos, std::function<void (HightlightType, int, int)> compareVisualize);
 void QuickRec(int* start, int* end, int abs_pos, std::function<void (HightlightType, int, int)> compareVisualize);
 void Heap(int* start, int* end, std::function<void (HightlightType, int, int)> compareVisualize);
+
+void Bogo(int* start, int* end, std::function<void (HightlightType, int, int)> compareVisualize);

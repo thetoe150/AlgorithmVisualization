@@ -1,7 +1,6 @@
-Shell sort - Radix sort
+Radix sort
 fix the data write and comparation count
 remove noise in sound
-random number every run - bogo sort?
 benchmark sort types performance
 save/load sorting stage to Json file
 make code clean

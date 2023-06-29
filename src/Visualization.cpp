@@ -1,20 +1,5 @@
 #include "Visualization.hpp"
 
-const float PILLAR_WIDTH = 10.f; 
-const float PILLAR_HEIGHT = 6.f;
-const int PILLAR_SIZE = 100;
-const int FRAME_RATE = 60;
-const int SOUND_POOL_SIZE = 20;
-const float LOWEST_PITCH = 0.25;
-const float PITCH_COEFFICIENT = 0.01;
-const static int SHELL_STEP_ARRAY[] = {7, 5, 3, 2, 1};
-
-static inline sf::Font ConfigFont();
-static inline void SetSortNameText(sf::Text& sorttype, SortType type);
-static inline void RandomizePillarVal(int* pillars_value);
-static inline void ConfigSound(sf::Sound soundPool[], sf::SoundBuffer& buffer, const std::string& src);
-static inline void PlaySoundFromPool(sf::Sound soundPool[], float pitch);
-
 static inline void ConfigSound(sf::Sound soundPool[], sf::SoundBuffer& buffer, const std::string& src)
 {
     if(!buffer.loadFromFile(src))
@@ -56,8 +41,8 @@ static inline void PlaySoundFromPool(sf::Sound soundPool[], float pitch)
         {
             idle = i;
         }
-
     }
+
     soundPool[idle].setPitch(pitch);
     soundPool[idle].play();
     //std::cout  <<pitch<<" ";
@@ -69,7 +54,6 @@ void VisualizeSorting(SortType type)
     sf::SoundBuffer buffer;
     std::string src = "res/goofy-ahh.wav";
     ConfigSound(sounds, buffer, src);
-
 
     long int compareCount = 0;
     long int writeArrayCount = 0;
@@ -135,6 +119,7 @@ void VisualizeSorting(SortType type)
     
             window.clear();
             
+			// @speed: redraw every pillar even if unchange
             for(unsigned int i = 0; i < pillars.size(); i++)
             {
                 pillars[i].setSize(sf::Vector2f(PILLAR_WIDTH, - PILLAR_HEIGHT * (*(pillars_value + i))));
@@ -204,6 +189,18 @@ void VisualizeSorting(SortType type)
         case SortType::Heap:
         {
             Heap(pillars_value, pillars_value + PILLAR_SIZE, drawSorting);
+            break;
+        }
+        
+        case SortType::LSD_Radix:
+        {
+            LSD_Radix(pillars_value, pillars_value + PILLAR_SIZE, drawSorting);
+            break;
+        }
+        
+        case SortType::MSD_Radix:
+        {
+            MSD_RadixRec(pillars_value, pillars_value + PILLAR_SIZE, drawSorting);
             break;
         }
         
@@ -278,6 +275,18 @@ static inline void SetSortNameText(sf::Text& sorttype, SortType type)
         case SortType::Heap:
         {
             sorttype.setString("heap sort");
+            break;
+        }
+
+        case SortType::LSD_Radix:
+        {
+            sorttype.setString("lsd radix sort");
+            break;
+        }
+        
+        case SortType::MSD_Radix:
+        {
+            sorttype.setString("msd radix sort");
             break;
         }
 

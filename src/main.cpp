@@ -26,43 +26,17 @@ int main(int argc, char *argv[]){
     sortMap["Merge"] = SortType::Merge;
     sortMap["Quick"] = SortType::Quick;
     sortMap["Heap"] = SortType::Heap;
+    sortMap["LSD_Radix"] = SortType::LSD_Radix;
+    sortMap["MSD_Radix"] = SortType::MSD_Radix;
     sortMap["Bogo"] = SortType::Bogo;
 
     if(argc < 2) return 1;
     std::string sortTypeStr(argv[1]);
-    switch(sortMap[sortTypeStr])
+    for(auto& i_map : sortMap)
     {
-        case SortType::Selection:{
-            VisualizeSorting(SortType::Selection);
-            break;
-        }
-        case SortType::Insertion:{
-            VisualizeSorting(SortType::Insertion);
-            break;
-        }
-        case SortType::Bubble:{
-            VisualizeSorting(SortType::Bubble);
-            break;
-        }
-        case SortType::Shell:{
-            VisualizeSorting(SortType::Shell);
-            break;
-        }
-        case SortType::Merge:{
-            VisualizeSorting(SortType::Merge);
-            break;
-        }
-        case SortType::Quick:{
-            VisualizeSorting(SortType::Quick);
-            break;
-        }
-        case SortType::Heap:{
-            VisualizeSorting(SortType::Heap);
-            break;
-        }
-        case SortType::Bogo:{
-            VisualizeSorting(SortType::Bogo);
-            break;
+        if(i_map.first == sortTypeStr)
+        {
+            VisualizeSorting(i_map.second);
         }
     }
     

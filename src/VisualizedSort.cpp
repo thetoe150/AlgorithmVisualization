@@ -44,28 +44,28 @@ void Insertion(int* start, int* end, std::function<void (HightlightType, int, in
 }
 
 void Selection(int* start, int* end, std::function<void (HightlightType, int, int)> drawSorting)
-    {
-    int size = end - start;
-    for(int i = 0; i < size - 1; i++)
-        {
-            int min = *(start + i);
-            int min_idx = i;
-            for(int j = i + 1; j < size; j++)
-            {
-                drawSorting(HightlightType::Compare, min_idx, j);
-                if(*(start + j) < min)
-                {
-                    min = *(start + j);
-                    min_idx = j;
-                }
-            }
-            int temp = *(start + i);
-            *(start + i) = *(start + min_idx);
-            *(start + min_idx) = temp;
-            drawSorting(HightlightType::Write, i, i);
-            drawSorting(HightlightType::Write, min_idx, min_idx);
-        }
-    }
+{
+int size = end - start;
+for(int i = 0; i < size - 1; i++)
+	{
+		int min = *(start + i);
+		int min_idx = i;
+		for(int j = i + 1; j < size; j++)
+		{
+			drawSorting(HightlightType::Compare, min_idx, j);
+			if(*(start + j) < min)
+			{
+				min = *(start + j);
+				min_idx = j;
+			}
+		}
+		int temp = *(start + i);
+		*(start + i) = *(start + min_idx);
+		*(start + min_idx) = temp;
+		drawSorting(HightlightType::Write, i, i);
+		drawSorting(HightlightType::Write, min_idx, min_idx);
+	}
+}
 
 void Bubble(int* start, int* end, std::function<void (HightlightType, int, int)> drawSorting)
 {
@@ -121,6 +121,41 @@ void Shell(int* start, int* end, const int* step_arr, int step_arr_size, std::fu
 
          }
       }
+   }
+}
+
+//Shell - Selection Hybrid
+void ShittyShell(int* start, int* end, const int* step_arr, int step_arr_size, std::function<void (HightlightType, int, int)> drawSorting)
+{
+   int size = end - start;
+   
+   for(int si = 0; si < step_arr_size; si++)
+   {
+        int step = step_arr[si];
+        for(int i_sorted = 0; i_sorted < size; i_sorted += step)
+        {
+            for(int i_subarr = i_sorted; i_subarr < i_sorted + step; i_subarr++)
+            {
+                int min = *(start + i_subarr);
+                int min_idx = i_subarr;
+                bool min_flag = false;
+                for(int i = i_subarr + step; i < size; i += step)
+                {
+                    drawSorting(HightlightType::Compare, i_subarr, i);
+                    if(*(start + i) < min)
+                    {
+                        min = *(start + i);
+                        min_idx = i;
+                        min_flag = true;
+                    }
+                }  
+                if(min_flag)
+                {
+                    *(start + min_idx) = *(start + i_subarr);
+                    *(start + i_subarr) = min;
+                }
+            }
+        }
    }
 }
 
@@ -320,10 +355,9 @@ void reheapDown(int* start, int* end, int ignoreEle, std::function<void (Hightli
 
         }
         else break;
-
     }
-
 }
+
 void Heap(int* start, int* end, std::function<void (HightlightType, int, int)> compareVisualize)
 {
     int size = end - start;
@@ -342,42 +376,15 @@ void Heap(int* start, int* end, std::function<void (HightlightType, int, int)> c
     }
 }
 
-
-//Shell - Selection Hybrid
-void ShittyShell(int* start, int* end, const int* step_arr, int step_arr_size, std::function<void (HightlightType, int, int)> drawSorting)
+void LSD_Radix(int* start, int* end, std::function<void (HightlightType, int, int)> compareVisualize)
 {
-   int size = end - start;
-   
-   for(int si = 0; si < step_arr_size; si++)
-   {
-        int step = step_arr[si];
-        for(int i_sorted = 0; i_sorted < size; i_sorted += step)
-        {
-            for(int i_subarr = i_sorted; i_subarr < i_sorted + step; i_subarr++)
-            {
-                int min = *(start + i_subarr);
-                int min_idx = i_subarr;
-                bool min_flag = false;
-                for(int i = i_subarr + step; i < size; i += step)
-                {
-                    drawSorting(HightlightType::Compare, i_subarr, i);
-                    if(*(start + i) < min)
-                    {
-                        min = *(start + i);
-                        min_idx = i;
-                        min_flag = true;
-                    }
-                }  
-                if(min_flag)
-                {
-                    *(start + min_idx) = *(start + i_subarr);
-                    *(start + i_subarr) = min;
-                }
-            }
-        }
-   }
+
 }
 
+void MSD_RadixRec(int* start, int* end, std::function<void (HightlightType, int, int)> compareVisualize)
+{
+
+}
 
 void Bogo(int* start, int* end, std::function<void (HightlightType, int, int)> compareVisualize)
 {
@@ -407,7 +414,6 @@ void Bogo(int* start, int* end, std::function<void (HightlightType, int, int)> c
             *(start + i) = arr[i];
         }
     }   
-
 }
 
 static inline bool checkBogo(int *start, int *end, std::function<void (HightlightType, int, int)> compareVisualize)

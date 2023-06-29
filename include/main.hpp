@@ -24,6 +24,8 @@ enum class SortType
     Merge,
     Quick,
     Heap,
+    LSD_Radix,
+    MSD_Radix,
     Bogo
 };
 

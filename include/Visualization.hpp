@@ -6,7 +6,7 @@
 const float PILLAR_WIDTH = 10.f; 
 const float PILLAR_HEIGHT = 6.f;
 const int PILLAR_SIZE = 100;
-const int FRAME_RATE = 60;
+const int FRAME_RATE = 40;
 const int SOUND_POOL_SIZE = 20;
 const float LOWEST_PITCH = 0.25;
 const float PITCH_COEFFICIENT = 0.01;

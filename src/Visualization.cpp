@@ -200,11 +200,11 @@ void VisualizeSorting(SortType type)
         
         case SortType::MSD_Radix:
         {
-            MSD_RadixRec(pillars_value, pillars_value + PILLAR_SIZE, drawSorting);
+            MSD_Radix(pillars_value, pillars_value + PILLAR_SIZE, drawSorting);
             break;
         }
         
-        case SortType::Bogo:
+       case SortType::Bogo:
         {
             Bogo(pillars_value, pillars_value + PILLAR_SIZE, drawSorting);
             break;

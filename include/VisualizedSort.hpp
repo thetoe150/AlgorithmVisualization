@@ -9,5 +9,5 @@ void MergeRec(int* start, int* end, int abs_pos, std::function<void (HightlightT
 void QuickRec(int* start, int* end, int abs_pos, std::function<void (HightlightType, int, int)> compareVisualize);
 void Heap(int* start, int* end, std::function<void (HightlightType, int, int)> compareVisualize);
 void LSD_Radix(int* start, int* end, std::function<void (HightlightType, int, int)> compareVisualize);
-void MSD_RadixRec(int* start, int* end, std::function<void (HightlightType, int, int)> compareVisualize);
+void MSD_Radix(int* start, int* end, std::function<void (HightlightType, int, int)> compareVisualize);
 void Bogo(int* start, int* end, std::function<void (HightlightType, int, int)> compareVisualize);

@@ -17,12 +17,14 @@ DLL_LDFLAGS = $(EXE_LFLAGS) -shared
 
 #obj/DataStructure.o obj/Algorithm.o obj/main.o
 ####### OBJECTS #######
-SRC_DIR = ./src/*
 SRC_FILE = $(wildcard src/*.cpp)
 DLL_OBJECTS = obj/DataStructure.o obj/Algorithm.o obj/Visualization.o
 #replace src/*.cpp to obj/*.o
 STATIC_EXE_OBJECTS =$(patsubst src/%, obj/%, $(patsubst %.cpp, %.o, $(SRC_FILE)))
 DYNAMIC_EXE_OBJECTS = obj/main.o
+
+run: ./bin/$(STATIC_EXE)
+	./bin/$(STATIC_EXE) $(S) $(N) 
 
 list_source_file: $(SRC_FILE)
 	@echo $^ 

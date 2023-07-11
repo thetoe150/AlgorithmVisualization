@@ -1,11 +1,12 @@
 #include "Visualization.hpp"
 
-
 static inline void Merge(int* start, int* mid, int* end, int abs_pos, std::function<void (HightlightType, int, int)> compareVisualize);
 static inline int* Quick(int* start, int* pivot, int* end, int abs_pos, std::function<void (HightlightType, int, int)> compareVisualize);
 static inline void reheapUp(int* start, int* end, int reheapIdx, std::function<void (HightlightType, int, int)> compareVisualize);
 static inline void reheapDown(int* start, int* end, int reheapIdx, std::function<void (HightlightType, int, int)> compareVisualize);
 static inline bool checkBogo(int* start, int* end, std::function<void (HightlightType, int, int)> compareVisualize);
+static inline int getDigit(int, int);
+static inline int getLengthNum(int);
 
 void printresult(int* start, int* end)
 {
@@ -376,14 +377,192 @@ void Heap(int* start, int* end, std::function<void (HightlightType, int, int)> c
     }
 }
 
+int getDigit(int number, int d)
+{
+	int expo = 1;
+	for(int i = 0; i < d; i++)
+	{
+		expo *= 10;
+	}
+
+	int digit = number % expo;
+	digit = digit / (expo / 10);	
+	return digit;
+};
+
+int getLengthNum(int number)
+{
+	int res = 1;
+	while(number / 10 != 0)
+	{
+		res += 1;
+		number /= 10;
+	}
+	return res;
+};
+
 void LSD_Radix(int* start, int* end, std::function<void (HightlightType, int, int)> compareVisualize)
 {
+	int size = end - start;
 
+	auto createBucket = [&](int d) -> int**{
+		int bucket_length[10]{0};
+		for(int i = 0; i < size; i++)
+		{
+			int ele = *(start + i);
+			//std::cout<< "Get digit of "<<ele <<" is " << getDigit(ele, d) <<"\n";
+			bucket_length[getDigit(ele, d)]++;
+		}
+
+		int** bucket = new int*[11];
+		for(int i = 0; i < 10; i++)
+		{
+			bucket[i] = new int[bucket_length[i]];
+			//std::cout<< "The number of ele in i "<< i <<" is " << bucket_length[i] <<"\n";
+		}
+		// 10th bucket element is used to store size of each array
+		bucket[10] = new int[10]{0};
+		memcpy(bucket[10], bucket_length, sizeof(bucket_length));
+
+		return bucket;
+	};
+
+	auto fillBucketFromArr = [&](int** bucket, int d) -> int**{
+		int bucket_count[10]{0};
+		for(int i = 0; i < size; i++)
+		{
+			int ele = *(start + i);
+			int digit = getDigit(ele, d);
+			//std::cout << bucket_count[digit + 1] <<"\n" << bucket[10][digit] << "\n";
+			assert(bucket_count[digit + 1] <= bucket[10][digit]);
+			bucket[digit][bucket_count[digit]++] = ele;
+		}
+		return bucket;
+	};
+
+	auto fillBucketFromBucket = [&](int** dest_bucket, int** src_bucket, int d) -> int**{
+		int bucket_count[10]{0};
+		for(int i = 0; i < 10; i++)
+		{
+			int size = src_bucket[10][i];
+			for(int j = 0; j < size; j++)
+			{
+				int ele = src_bucket[i][j];
+				int digit = getDigit(ele, d);
+				//std::cout << bucket_count[digit + 1] <<"\n" << dest_bucket[10][digit] << "\n";
+				assert(bucket_count[digit + 1] <= dest_bucket[10][digit]);
+				dest_bucket[digit][bucket_count[digit]++] = ele;
+			}
+		}
+		return dest_bucket;
+	};
+
+	auto deleteBucket = [](int** bucket) -> void{
+		for(int i = 0; i < 10; i++)
+		{
+			delete[] bucket[i];
+		}
+		delete bucket;
+	};
+
+	auto assignArr = [&](int** bucket){
+		int i_array = 0;
+		for(int i = 0; i < 10; i++)
+		{
+			int size = bucket[10][i];
+			for(int j = 0; j < size; j++)
+			{
+				*(start + i_array) = bucket[i][j];
+				compareVisualize(HightlightType::Compare, i_array, i_array);
+				i_array++;
+			}
+		}
+	};
+	
+	int max = 0;
+	for(int i = 0; i < size; i++)
+	{
+		int ele = *(start + i);
+		if(ele > max)
+		{
+			max = ele;
+		}
+	}
+	// getLengthNum return 1 (not 0) if there is only 1 digit
+	int digit_size = getLengthNum(max);
+	int i_digit = 1;
+	// The first bucket fill
+	int** target_bucket = NULL;
+	int** source_bucket = createBucket(i_digit);
+	source_bucket = fillBucketFromArr(source_bucket, i_digit);
+	assignArr(source_bucket);
+	i_digit += 1;
+
+	// The rest bucket fill
+	while(i_digit <= digit_size)
+	{
+		//std::cout << "i_digit: "<< i_digit <<"\n";
+		target_bucket = createBucket(i_digit);	
+		target_bucket = fillBucketFromBucket(target_bucket, source_bucket, i_digit);
+		assignArr(target_bucket);
+		deleteBucket(source_bucket);
+		source_bucket = target_bucket;
+		i_digit += 1;
+	}
+	
+	deleteBucket(source_bucket);
 }
 
-void MSD_RadixRec(int* start, int* end, std::function<void (HightlightType, int, int)> compareVisualize)
+void MSD_Radix(int* start, int* end, std::function<void (HightlightType, int, int)> compareVisualize)
 {
+	int size = end - start;
 
+	int max = 0;
+	for(int i = 0; i < size; i++)
+	{
+		int ele = *(start + i);
+		if(ele > max)
+		{
+			max = ele;
+		}
+	}
+	// getLengthNum return 1 (not 0) if there is only 1 digit
+	int digit_size = getLengthNum(max);
+}
+
+void MSD_RadixRec(int* start, int size, int& d, std::function<void (HightlightType, int, int)> compareVisualize)
+{
+	if(size <= 1)
+		return;
+
+	// count the elements in buckets
+	int bucket_length[10]{0};
+	for(int i = 0; i < size; i++)
+	{
+		int ele = *(start + i);
+		//std::cout<< "Get digit of "<<ele <<" is " << getDigit(ele, d) <<"\n";
+		bucket_length[getDigit(ele, d)]++;
+	}
+
+	// allocate the buckets
+	int** bucket = new int*[10];
+	for(int i = 0; i < 10; i++)
+	{
+		// Todo: the case we allocate 0 element
+		bucket[i] = new int[bucket_length[i]];
+	}
+
+	// fill the buckets
+	int bucket_count[10]{0};
+	for(int i = 0; i < size; i++)
+	{
+		int ele = *(start + i);
+		//std::cout<< "Get digit of "<<ele <<" is " << getDigit(ele, d) <<"\n";
+		int digit = getDigit(ele, d);
+		assert(bucket_count[digit + 1] <= bucket_length[digit]);
+		bucket[digit][bucket_count[digit]++] = ele;
+
+	}
 }
 
 void Bogo(int* start, int* end, std::function<void (HightlightType, int, int)> compareVisualize)

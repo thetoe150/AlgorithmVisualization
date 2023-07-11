@@ -6,9 +6,11 @@
 #include <random>
 #include <chrono>
 #include <functional>
+#include <memory.h>
 #include <string>
 #include <array>
 #include <unordered_map>
+#include <cassert>
 
 #include "SFML/Graphics.hpp"
 #include "SFML/Audio.hpp"

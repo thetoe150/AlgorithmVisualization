@@ -1,8 +1,6 @@
 #include "main.hpp"
 #include "Visualization.hpp"
 
-const int PILLAR_SIZE = 100;
-
 int main(int argc, char *argv[]){
     //int array[10] = {6,4,2,18,1,8,33,12,7,0};
     //int step[3] = {3,2,1};
@@ -32,13 +30,8 @@ int main(int argc, char *argv[]){
 
     if(argc < 2) return 1;
     std::string sortTypeStr(argv[1]);
-    for(auto& i_map : sortMap)
-    {
-        if(i_map.first == sortTypeStr)
-        {
-            VisualizeSorting(i_map.second);
-        }
-    }
+
+	VisualizeSorting(sortMap[sortTypeStr]);
     
     return 0;
 }

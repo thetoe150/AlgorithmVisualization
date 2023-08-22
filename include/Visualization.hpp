@@ -8,11 +8,11 @@ constexpr float WINDOW_HEIGHT = 1000;
 constexpr float OFFSET_TOP = 250;
 constexpr float OFFSET_BOT = 30;
 constexpr float OFFSET_SIDE = 50;
-constexpr float OUTLINE_WIDTH = 0.0;
+constexpr float OUTLINE_WIDTH = 0.5;
 const int FRAME_RATE = 60;
 const int SOUND_POOL_SIZE = 20;
-constexpr float LOWEST_PITCH = 0.25f;
-constexpr float HIGHTEST_PITCH = 1.75f;
+constexpr float LOWEST_PITCH = 0.05f;
+constexpr float HIGHTEST_PITCH = 1.30f;
 const static int SHELL_STEP_ARRAY[] = {7, 5, 3, 2, 1};
 
 static inline sf::Font ConfigFont();

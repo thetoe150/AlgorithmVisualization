@@ -30,8 +30,9 @@ int main(int argc, char *argv[]){
 
     if(argc < 2) return 1;
     std::string sortTypeStr(argv[1]);
+    std::string sortCountStr(argv[2]);
 
-	VisualizeSorting(sortMap[sortTypeStr]);
+	VisualizeSorting(sortMap[sortTypeStr], std::stoi(sortCountStr));
     
     return 0;
 }

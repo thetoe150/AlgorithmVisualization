@@ -48,7 +48,7 @@ static inline void PlaySoundFromPool(sf::Sound soundPool[], float pitch)
     //std::cout  <<pitch<<" ";
 }
 
-void VisualizeSorting(SortType type)
+void VisualizeSorting(SortType type, int n)
 {
     sf::Sound sounds[SOUND_POOL_SIZE];
     sf::SoundBuffer buffer;
@@ -57,7 +57,8 @@ void VisualizeSorting(SortType type)
 
     long int compareCount = 0;
     long int writeArrayCount = 0;
-    sf::RenderWindow window(sf::VideoMode(1250, 850), "algorithm visualization");
+    sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT),
+                            "algorithm visualization");
     window.setFramerateLimit(FRAME_RATE);
 
     //setup font and sort info
@@ -67,19 +68,21 @@ void VisualizeSorting(SortType type)
     SetSortNameText(sortNameText, type);
 
     //random array values
-    int pillars_value[PILLAR_SIZE] = {0};
-    RandomizePillarVal(pillars_value);
+	int* pillars_value = new int[n];
+    RandomizePillarVal(pillars_value, n);
 
     //sort<int>::mergerec(pillars_value, pillars_value + pillar_size);
     //sort<int>::print(pillars_value, pillars_value + pillar_size);
     
     //setup the pillars
-    std::array<sf::RectangleShape, PILLAR_SIZE> pillars;
-    for(unsigned int i = 0; i < pillars.size(); i++)
+    std::vector<sf::RectangleShape> pillars;
+    for(unsigned int i = 0; i < n; i++)
     {
-        pillars[i].setFillColor(sf::Color::White);
-        pillars[i].setOutlineColor(sf::Color::Black);
-        pillars[i].setOutlineThickness(2.f);
+		sf::RectangleShape pillar;
+        pillar.setFillColor(sf::Color::White);
+        pillar.setOutlineColor(sf::Color::Black);
+        pillar.setOutlineThickness(OUTLINE_WIDTH);
+		pillars.push_back(pillar);
     }
 
     auto compareTextVisual = [&compareCount, &sortFont]() -> sf::Text
@@ -109,10 +112,11 @@ void VisualizeSorting(SortType type)
                     window.close();
             }
 
+			float pitch_step = (HIGHTEST_PITCH - LOWEST_PITCH) / n;
             if(hightlighttype == HightlightType::Compare)
             {
-                PlaySoundFromPool(sounds, LOWEST_PITCH + PITCH_COEFFICIENT * pillars_value[swapele1]);
-                PlaySoundFromPool(sounds, LOWEST_PITCH + PITCH_COEFFICIENT * pillars_value[swapele2]);
+                PlaySoundFromPool(sounds, LOWEST_PITCH + pitch_step * pillars_value[swapele1]);
+                PlaySoundFromPool(sounds, LOWEST_PITCH + pitch_step * pillars_value[swapele2]);
             }
             //else 
                 //PlaySoundFromPool(sounds, 0.01 * pillars_value[swapele2]);
@@ -122,8 +126,12 @@ void VisualizeSorting(SortType type)
 			// @speed: redraw every pillar even if unchange
             for(unsigned int i = 0; i < pillars.size(); i++)
             {
-                pillars[i].setSize(sf::Vector2f(PILLAR_WIDTH, - PILLAR_HEIGHT * (*(pillars_value + i))));
-                pillars[i].setPosition(30 + (PILLAR_WIDTH + 2) * i , 800.f); //plus 2 pixel for the outline of the rectangle
+				float pillar_width_unit = (WINDOW_WIDTH - OFFSET_SIDE * 2) / n - OUTLINE_WIDTH * 2;
+				float pillar_height_unit = (WINDOW_HEIGHT - OFFSET_TOP + OFFSET_BOT) / n;
+                pillars[i].setSize(sf::Vector2f(pillar_width_unit,
+								- pillar_height_unit * (*(pillars_value + i))));
+                pillars[i].setPosition((pillar_width_unit + OUTLINE_WIDTH * 2) * i + OFFSET_SIDE,
+									   WINDOW_HEIGHT - OFFSET_BOT); //plus 2 pixel for the outline of the rectangle
                 if(i == (unsigned int)swapele1 || i == (unsigned int)swapele2)
                 {
                     if(hightlighttype == HightlightType::Compare)
@@ -152,67 +160,67 @@ void VisualizeSorting(SortType type)
     {
         case SortType::Insertion:
         {
-            Insertion(pillars_value, pillars_value + PILLAR_SIZE, drawSorting);
+            Insertion(pillars_value, pillars_value + n, drawSorting);
             break;
         }
         
         case SortType::Selection:
         {
-            Selection(pillars_value, pillars_value + PILLAR_SIZE, drawSorting);
+            Selection(pillars_value, pillars_value + n, drawSorting);
             break;
         }
         
         case SortType::Bubble:
         {
-            Bubble(pillars_value, pillars_value + PILLAR_SIZE, drawSorting);
+            Bubble(pillars_value, pillars_value + n, drawSorting);
             break;
         }
 
         case SortType::Shell:
         {
-            Shell(pillars_value, pillars_value + PILLAR_SIZE, SHELL_STEP_ARRAY, sizeof(SHELL_STEP_ARRAY) / sizeof(int), drawSorting);
+            Shell(pillars_value, pillars_value + n, SHELL_STEP_ARRAY, sizeof(SHELL_STEP_ARRAY) / sizeof(int), drawSorting);
             break;
         }
         
         case SortType::Merge:
         {
-            MergeRec(pillars_value, pillars_value + PILLAR_SIZE, 0, drawSorting);
+            MergeRec(pillars_value, pillars_value + n, 0, drawSorting);
             break;
         }
         
         case SortType::Quick:
         {
-            QuickRec(pillars_value, pillars_value + PILLAR_SIZE, 0, drawSorting);
+            QuickRec(pillars_value, pillars_value + n, 0, drawSorting);
             break;
         }
 
         case SortType::Heap:
         {
-            Heap(pillars_value, pillars_value + PILLAR_SIZE, drawSorting);
+            Heap(pillars_value, pillars_value + n, drawSorting);
             break;
         }
         
         case SortType::LSD_Radix:
         {
-            LSD_Radix(pillars_value, pillars_value + PILLAR_SIZE, drawSorting);
+            LSD_Radix(pillars_value, pillars_value + n, drawSorting);
             break;
         }
         
         case SortType::MSD_Radix:
         {
-            MSD_Radix(pillars_value, pillars_value + PILLAR_SIZE, drawSorting);
+            MSD_Radix(pillars_value, pillars_value + n, drawSorting);
             break;
         }
         
        case SortType::Bogo:
         {
-            Bogo(pillars_value, pillars_value + PILLAR_SIZE, drawSorting);
+            Bogo(pillars_value, pillars_value + n, drawSorting);
             break;
         }
     }
 
     std::cout<<"Sorted array: "<<std::endl;
-    for(int i = 0; i < PILLAR_SIZE; i++)
+    for(int i = 0; i < n; i++)
     {
         std::cout << pillars_value[i] << " ";
     }
@@ -298,12 +306,12 @@ static inline void SetSortNameText(sf::Text& sorttype, SortType type)
     }
 }
 
-static inline void RandomizePillarVal(int* pillars_value)
+static inline void RandomizePillarVal(int* pillars_value, int n)
 {
-    std::array<int, PILLAR_SIZE> arr;
-    for(int i = 0; i < PILLAR_SIZE; i++)
+    std::vector<int> arr;
+    for(int i = 1; i <= n; i++)
     {
-        arr[i] = i + 1;
+		arr.push_back(i);
     }
 
     time_t tt = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
@@ -314,7 +322,7 @@ static inline void RandomizePillarVal(int* pillars_value)
 
 
     std::cout<<"Original array: "<<std::endl;
-    for(int i = 0; i < PILLAR_SIZE; i++)
+    for(int i = 0; i < n; i++)
     {
         pillars_value[i] = arr[i];
         std::cout<<pillars_value[i] << " ";

@@ -1,8 +1,0 @@
-- add Radix sort
-- fix the data write and comparation count
-- remove noise in sound
-- benchmark sort types performance
-- simulate to find worst case - average case - best case
-- add Json parser for save/load sorting stage to Json file
-- add scripting (number of element, sort type...) with Lua
-- use compute shader to sort?

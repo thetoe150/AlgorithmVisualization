@@ -3,6 +3,7 @@
 #include "main.hpp"
 #include "VisualizedSort.hpp"
 #include "globalConstant.hpp"
+#include "Timer.hpp"
 
 static inline sf::Font ConfigFont();
 static inline void SetSortNameText(sf::Text& sorttype, SortType type);

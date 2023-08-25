@@ -157,6 +157,7 @@ void VisualizeSorting(SortType type, int n)
         }
     };
 	 
+	Timer a("Sort and Visualize time");
     switch(type)
     {
         case SortType::Insertion:
@@ -309,6 +310,7 @@ static inline void SetSortNameText(sf::Text& sorttype, SortType type)
 
 static inline void RandomizePillarVal(int* pillars_value, int n)
 {
+	Timer a("Random time");
     std::vector<int> arr;
     for(int i = 1; i <= n; i++)
     {

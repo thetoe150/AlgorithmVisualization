@@ -108,7 +108,7 @@ void VisualizeSorting(SortType type, int n)
             sf::Event event;
             while (window.pollEvent(event))
             {
-                if (event.type == sf::Event::Closed)
+                if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
                     window.close();
             }
 
@@ -156,6 +156,7 @@ void VisualizeSorting(SortType type, int n)
             window.display();
         }
     };
+	 
     switch(type)
     {
         case SortType::Insertion:

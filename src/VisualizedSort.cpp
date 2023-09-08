@@ -420,7 +420,7 @@ void LSD_Radix(int* start, int* end, std::function<void (HightlightType, int, in
 			bucket[i] = new int[bucket_length[i]];
 			//std::cout<< "The number of ele in i "<< i <<" is " << bucket_length[i] <<"\n";
 		}
-		// 10th bucket element is used to store size of each array
+		// NOTE: 10th bucket element is used to store size of each array
 		bucket[10] = new int[10]{0};
 		memcpy(bucket[10], bucket_length, sizeof(bucket_length));
 
@@ -434,13 +434,14 @@ void LSD_Radix(int* start, int* end, std::function<void (HightlightType, int, in
 			int ele = *(start + i);
 			int digit = getDigit(ele, d);
 			//std::cout << bucket_count[digit + 1] <<"\n" << bucket[10][digit] << "\n";
-			assert(bucket_count[digit + 1] <= bucket[10][digit]);
+			assert(bucket_count[digit] <= bucket[10][digit]);
 			bucket[digit][bucket_count[digit]++] = ele;
 		}
 		return bucket;
 	};
 
 	auto fillBucketFromBucket = [&](int** dest_bucket, int** src_bucket, int d) -> int**{
+		// NOTE: count how many element in each bucket
 		int bucket_count[10]{0};
 		for(int i = 0; i < 10; i++)
 		{
@@ -450,7 +451,7 @@ void LSD_Radix(int* start, int* end, std::function<void (HightlightType, int, in
 				int ele = src_bucket[i][j];
 				int digit = getDigit(ele, d);
 				//std::cout << bucket_count[digit + 1] <<"\n" << dest_bucket[10][digit] << "\n";
-				assert(bucket_count[digit + 1] <= dest_bucket[10][digit]);
+				assert(bucket_count[digit] <= dest_bucket[10][digit]);
 				dest_bucket[digit][bucket_count[digit]++] = ele;
 			}
 		}

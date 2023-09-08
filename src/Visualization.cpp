@@ -64,7 +64,7 @@ void VisualizeSorting(SortType type, int n)
     //setup font and sort info
     sf::Font sortFont = ConfigFont();
     
-    sf::Text sortNameText("default", sortFont, 15);
+    sf::Text sortNameText("default", sortFont, 25);
     SetSortNameText(sortNameText, type);
 
     //random array values
